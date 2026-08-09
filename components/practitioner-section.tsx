@@ -8,7 +8,7 @@ export function PractitionerSection() {
       <div className="grid gap-10 rounded-2xl border border-border bg-card p-6 sm:p-10 lg:grid-cols-[280px_1fr] lg:items-center lg:gap-12">
         <div className="relative mx-auto aspect-square w-48 overflow-hidden rounded-2xl sm:w-56 lg:mx-0 lg:w-full">
           <Image
-            src="/images/practitioner-husein.png"
+            src="/images/practitioner-husein.webp"
             alt={`${business.practitioner.name}, podiatrist at Healing Motion Podiatry`}
             fill
             sizes="(min-width: 1024px) 280px, 224px"
