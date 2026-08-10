@@ -31,7 +31,7 @@ export const business = {
     { day: 'Saturday', open: '09:00', close: '17:00' },
   ],
   hoursDisplay: 'Monday – Saturday, 9:00 AM – 5:00 PM',
-  siteUrl: 'https://www.healingmotionpodiatry.com.au',
+  siteUrl: 'https://www.healingmotionpodiatry.com',
 } as const
 
 export const fullAddress = `${business.address.street}, ${business.address.suburb} ${business.address.state} ${business.address.postcode}`

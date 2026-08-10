@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Inter, Manrope } from 'next/font/google'
 import Script from 'next/script'
+import { business } from '@/lib/business-data'
 import './globals.css'
 
 const GA4_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID || 'G-4F4S44BBW0'
@@ -19,10 +20,8 @@ const manrope = Manrope({
   display: 'swap',
 })
 
-const siteUrl = 'https://www.healingmotionpodiatry.com.au'
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(business.siteUrl),
   title: {
     default: 'BEST Podiatrist in Melbourne | Expert Family, Sports and Custom Orthotics Podiatry in Roxburgh Park Melbourne | Healing Motion Podiatry',
     template: '%s | Healing Motion Podiatry',
@@ -46,7 +45,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_AU',
-    url: siteUrl,
+    url: business.siteUrl,
     siteName: 'Healing Motion Podiatry',
     title: 'BEST Podiatrist in Melbourne | Expert Family, Sports and Custom Orthotics Podiatry in Roxburgh Park Melbourne | Healing Motion Podiatry',
     description:
