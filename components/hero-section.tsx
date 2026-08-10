@@ -9,10 +9,10 @@ export function HeroSection() {
       <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 sm:px-6 sm:py-20 lg:grid-cols-2 lg:items-center lg:py-24">
         <div className="flex flex-col gap-6">
           <span className="inline-flex w-fit items-center rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-primary">
-            Podiatrist in Roxburgh Park
+            Podiatrist in Roxburgh Park, Melbourne
           </span>
           <h1 className="font-heading text-4xl font-bold tracking-tight text-foreground text-balance sm:text-5xl lg:text-6xl">
-            Expert foot care to keep you moving
+            Melbourne Podiatry That Gets You Walking Pain Free Again
           </h1>
           <p className="max-w-xl text-lg leading-relaxed text-muted-foreground text-pretty">
             Healing Motion Podiatry provides evidence-based treatment for ingrown
