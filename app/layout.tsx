@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     locale: 'en_AU',
     url: siteUrl,
     siteName: 'Healing Motion Podiatry',
-    title: 'Healing Motion Podiatry | Podiatrist in Roxburgh Park, Melbourne',
+    title: 'BEST Podiatrist in Melbourne | Expert Family, Sports and Orthotics Podiatry in Roxburgh Park Melbourne | Healing Motion Podiatry'
     description:
       'Expert podiatry care in Roxburgh Park — ingrown toenails, diabetic foot care, orthotics, sports injuries, and general foot health.',
     images: [{ url: '/opengraph-image.png', width: 1200, height: 630 }],
