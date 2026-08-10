@@ -24,7 +24,11 @@ export async function GET() {
     ...faqs.map((f) => `- Q: ${f.question}\n  A: ${f.answer}`),
     '',
     '## Pages',
-    `- Home: ${business.siteUrl}/`,
+    `- [Home](${business.siteUrl}/): Overview of the clinic, services, and booking options.`,
+    `- [Services](${business.siteUrl}/#services): General podiatry, ingrown toenail treatment, diabetic foot care, custom orthotics, sports injury management, and heel & arch pain treatment.`,
+    `- [About](${business.siteUrl}/#about): Information about the clinic and podiatrist ${business.practitioner.name}.`,
+    `- [FAQ](${business.siteUrl}/#faq): Answers to common questions about referrals, bookings, and appointments.`,
+    `- [Location](${business.siteUrl}/#contact): Address, opening hours, phone number, and contact form.`,
   ]
 
   return new Response(lines.join('\n'), {

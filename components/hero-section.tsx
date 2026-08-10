@@ -36,22 +36,22 @@ export function HeroSection() {
             </Button>
           </div>
 
-          <dl className="mt-2 flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:gap-8">
-            <div className="flex items-start gap-2.5">
+          <ul className="mt-2 flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:gap-8">
+            <li className="flex items-start gap-2.5">
               <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-              <div>
-                <dt className="sr-only">Address</dt>
-                <dd className="text-sm text-muted-foreground">{fullAddress}</dd>
-              </div>
-            </div>
-            <div className="flex items-start gap-2.5">
+              <span className="text-sm text-muted-foreground">
+                <span className="sr-only">Address: </span>
+                {fullAddress}
+              </span>
+            </li>
+            <li className="flex items-start gap-2.5">
               <Clock className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
-              <div>
-                <dt className="sr-only">Opening hours</dt>
-                <dd className="text-sm text-muted-foreground">{business.hoursDisplay}</dd>
-              </div>
-            </div>
-          </dl>
+              <span className="text-sm text-muted-foreground">
+                <span className="sr-only">Opening hours: </span>
+                {business.hoursDisplay}
+              </span>
+            </li>
+          </ul>
         </div>
 
         <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-xl lg:aspect-square">
