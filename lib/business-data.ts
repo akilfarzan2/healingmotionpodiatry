@@ -10,9 +10,9 @@ export const business = {
     credentials: 'Podiatrist',
     title: 'Podiatrist & Clinic Director',
   },
-  phone: '0435182213',
-  phoneDisplay: '0435 182 213',
-  phoneIntl: '+61435182213',
+  phone: '0415 595 956',
+  phoneDisplay: '0415 595 956',
+  phoneIntl: '+61415 595 956',
   email: 'info@healingmotionpodiatry.com.au',
   address: {
     street: 'Shop 25E/250 Somerton Rd',
