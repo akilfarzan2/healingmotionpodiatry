@@ -24,11 +24,11 @@ const siteUrl = 'https://www.healingmotionpodiatry.com.au'
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Healing Motion Podiatry | Podiatrist in Roxburgh Park, Melbourne',
+    default: 'BEST Podiatrist in Melbourne | Expert Family, Sports and Custom Orthotics Podiatry in Roxburgh Park Melbourne | Healing Motion Podiatry',
     template: '%s | Healing Motion Podiatry',
   },
   description:
-    'Healing Motion Podiatry in Roxburgh Park treats ingrown toenails, heel pain, diabetic foot care, custom orthotics, and sports injuries. Book with podiatrist Husein Alzurifi today.',
+    'Expert Family, Sports, Custom Orthotics & Heel Pain Podiatry in Roxburgh Park Melbourne — specialise in ingrown toenails, diabetic foot care, orthotics, sports injuries, and general foot health. Shop 25E/250 Somerton Rd, Roxburgh Park VIC 3064 or Call 0435 182 213',
   generator: 'v0.app',
   keywords: [
     'podiatrist Roxburgh Park',
@@ -48,9 +48,9 @@ export const metadata: Metadata = {
     locale: 'en_AU',
     url: siteUrl,
     siteName: 'Healing Motion Podiatry',
-    title: 'BEST Podiatrist in Melbourne | Expert Family, Sports and Orthotics Podiatry in Roxburgh Park Melbourne | Healing Motion Podiatry'
+    title: 'BEST Podiatrist in Melbourne | Expert Family, Sports and Custom Orthotics Podiatry in Roxburgh Park Melbourne | Healing Motion Podiatry',
     description:
-      'Expert podiatry care in Roxburgh Park — ingrown toenails, diabetic foot care, orthotics, sports injuries, and general foot health.',
+      'Expert Family, Sports, Custom Orthotics & Heel Pain Podiatry in Roxburgh Park Melbourne — specialise in ingrown toenails, diabetic foot care, orthotics, sports injuries, and general foot health. Shop 25E/250 Somerton Rd, Roxburgh Park VIC 3064 or Call 0435 182 213',
     images: [{ url: '/opengraph-image.png', width: 1200, height: 630 }],
   },
   twitter: {
