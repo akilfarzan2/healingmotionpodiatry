@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     template: '%s | Healing Motion Podiatry',
   },
   description:
-    'Expert Family, Sports, Custom Orthotics & Heel Pain Podiatry in Roxburgh Park Melbourne — specialise in ingrown toenails, diabetic foot care, orthotics, sports injuries, and general foot health. Shop 25E/250 Somerton Rd, Roxburgh Park VIC 3064 or Call 0435 182 213',
+    'Expert Family, Sports, Custom Orthotics & Heel Pain Podiatry in Roxburgh Park Melbourne — specialise in ingrown toenails, diabetic foot care, orthotics, sports injuries, and general foot health. Shop 25E/250 Somerton Rd, Roxburgh Park VIC 3064 or Call 0415 595 956',
   generator: 'v0.app',
   keywords: [
     'podiatrist Roxburgh Park',
