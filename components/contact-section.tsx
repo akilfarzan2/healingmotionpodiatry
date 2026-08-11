@@ -1,9 +1,11 @@
 import { MapPin, Phone, Mail, Clock } from 'lucide-react'
 import { ContactForm } from '@/components/contact-form'
-import { business, fullAddress } from '@/lib/business-data'
+import { getFullAddress, getSiteSettings } from '@/lib/sanity/data'
 
-export function ContactSection() {
-  const mapQuery = encodeURIComponent(`${business.name}, ${fullAddress}`)
+export async function ContactSection() {
+  const settings = await getSiteSettings()
+  const fullAddress = getFullAddress(settings.address)
+  const mapQuery = encodeURIComponent(`${settings.name}, ${fullAddress}`)
 
   return (
     <section id="contact" className="mx-auto max-w-6xl scroll-mt-16 px-4 py-16 sm:px-6 sm:py-24">
@@ -35,10 +37,10 @@ export function ContactSection() {
               <div>
                 <p className="font-heading text-sm font-semibold text-foreground">Phone</p>
                 <a
-                  href={`tel:${business.phoneIntl}`}
+                  href={`tel:${settings.phoneIntl}`}
                   className="text-sm text-muted-foreground hover:text-primary"
                 >
-                  {business.phoneDisplay}
+                  {settings.phoneDisplay}
                 </a>
               </div>
             </div>
@@ -47,10 +49,10 @@ export function ContactSection() {
               <div>
                 <p className="font-heading text-sm font-semibold text-foreground">Email</p>
                 <a
-                  href={`mailto:${business.email}`}
+                  href={`mailto:${settings.email}`}
                   className="text-sm text-muted-foreground hover:text-primary"
                 >
-                  {business.email}
+                  {settings.email}
                 </a>
               </div>
             </div>
@@ -60,14 +62,14 @@ export function ContactSection() {
                 <p className="font-heading text-sm font-semibold text-foreground">
                   Opening hours
                 </p>
-                <p className="text-sm text-muted-foreground">{business.hoursDisplay}</p>
+                <p className="text-sm text-muted-foreground">{settings.hoursDisplay}</p>
               </div>
             </div>
           </address>
 
           <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-border">
             <iframe
-              title={`Map showing the location of ${business.name}`}
+              title={`Map showing the location of ${settings.name}`}
               src={`https://www.google.com/maps?q=${mapQuery}&output=embed`}
               className="absolute inset-0 h-full w-full"
               loading="lazy"

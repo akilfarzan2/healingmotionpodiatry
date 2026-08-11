@@ -1,34 +1,42 @@
-import { business, faqs, fullAddress, services } from '@/lib/business-data'
+import { getFaqs, getFullAddress, getPractitioner, getServices, getSiteSettings } from '@/lib/sanity/data'
 
 // llms.txt is an emerging, unofficial convention for giving AI crawlers a
 // clean plain-text summary of the site. It supplements (never replaces)
 // proper JSON-LD structured data and semantic HTML.
 export async function GET() {
+  const [settings, practitioner, services, faqs] = await Promise.all([
+    getSiteSettings(),
+    getPractitioner(),
+    getServices(),
+    getFaqs(),
+  ])
+  const fullAddress = getFullAddress(settings.address)
+
   const lines = [
-    `# ${business.name}`,
+    `# ${settings.name}`,
     '',
-    `> Podiatry clinic in ${business.address.suburb}, ${business.address.state}, ${business.address.countryName}.`,
+    `> Podiatry clinic in ${settings.address.suburb}, ${settings.address.state}, ${settings.address.countryName}.`,
     '',
     '## Business details',
-    `- Name: ${business.name}`,
+    `- Name: ${settings.name}`,
     `- Address: ${fullAddress}`,
-    `- Phone: ${business.phoneDisplay}`,
-    `- Email: ${business.email}`,
-    `- Hours: ${business.hoursDisplay}`,
-    `- Practitioner: ${business.practitioner.name}, ${business.practitioner.title}`,
+    `- Phone: ${settings.phoneDisplay}`,
+    `- Email: ${settings.email}`,
+    `- Hours: ${settings.hoursDisplay}`,
+    `- Practitioner: ${practitioner.name}, ${practitioner.title ?? ''}`.trim(),
     '',
     '## Services',
-    ...services.map((s) => `- ${s.name}: ${s.summary}`),
+    ...services.map((s) => `- ${s.name}: ${s.summary ?? ''}`),
     '',
     '## Frequently asked questions',
     ...faqs.map((f) => `- Q: ${f.question}\n  A: ${f.answer}`),
     '',
     '## Pages',
-    `- [Home](${business.siteUrl}/): Overview of the clinic, services, and booking options.`,
-    `- [Services](${business.siteUrl}/#services): General podiatry, ingrown toenail treatment, diabetic foot care, custom orthotics, sports injury management, and heel & arch pain treatment.`,
-    `- [About](${business.siteUrl}/#about): Information about the clinic and podiatrist ${business.practitioner.name}.`,
-    `- [FAQ](${business.siteUrl}/#faq): Answers to common questions about referrals, bookings, and appointments.`,
-    `- [Location](${business.siteUrl}/#contact): Address, opening hours, phone number, and contact form.`,
+    `- [Home](${settings.siteUrl}/): Overview of the clinic, services, and booking options.`,
+    `- [Services](${settings.siteUrl}/#services): General podiatry, ingrown toenail treatment, diabetic foot care, custom orthotics, sports injury management, and heel & arch pain treatment.`,
+    `- [About](${settings.siteUrl}/#about): Information about the clinic and podiatrist ${practitioner.name}.`,
+    `- [FAQ](${settings.siteUrl}/#faq): Answers to common questions about referrals, bookings, and appointments.`,
+    `- [Location](${settings.siteUrl}/#contact): Address, opening hours, phone number, and contact form.`,
   ]
 
   return new Response(lines.join('\n'), {

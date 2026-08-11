@@ -1,10 +1,12 @@
 import type { MetadataRoute } from 'next'
-import { business } from '@/lib/business-data'
+import { getSiteSettings } from '@/lib/sanity/data'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const settings = await getSiteSettings()
+
   return [
     {
-      url: business.siteUrl,
+      url: settings.siteUrl,
       lastModified: new Date(),
       changeFrequency: 'monthly',
       priority: 1,

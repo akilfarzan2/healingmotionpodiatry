@@ -2,7 +2,7 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Inter, Manrope } from 'next/font/google'
 import Script from 'next/script'
-import { business } from '@/lib/business-data'
+import { getSiteSettings } from '@/lib/sanity/data'
 import './globals.css'
 
 const GA4_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA4_MEASUREMENT_ID || 'G-4F4S44BBW0'
@@ -20,44 +20,50 @@ const manrope = Manrope({
   display: 'swap',
 })
 
-export const metadata: Metadata = {
-  metadataBase: new URL(business.siteUrl),
-  title: {
-    default: 'BEST Podiatrist in Melbourne | Expert Family, Sports and Custom Orthotics Podiatry in Roxburgh Park Melbourne | Healing Motion Podiatry',
-    template: '%s | Healing Motion Podiatry',
-  },
-  description:
-    'Expert Family, Sports, Custom Orthotics & Heel Pain Podiatry in Roxburgh Park Melbourne — specialise in ingrown toenails, diabetic foot care, orthotics, sports injuries, and general foot health. Shop 25E/250 Somerton Rd, Roxburgh Park VIC 3064 or Call 0415 595 956',
-  generator: 'v0.app',
-  keywords: [
-    'podiatrist Roxburgh Park',
-    'podiatry clinic Melbourne',
-    'ingrown toenail treatment',
-    'diabetic foot care',
-    'custom orthotics',
-    'heel pain treatment',
-    'Husein Alzurifi podiatrist',
-  ],
-  authors: [{ name: 'Healing Motion Podiatry' }],
-  alternates: {
-    canonical: '/',
-  },
-  openGraph: {
-    type: 'website',
-    locale: 'en_AU',
-    url: business.siteUrl,
-    siteName: 'Healing Motion Podiatry',
-    title: 'BEST Podiatrist in Melbourne | Expert Family, Sports and Custom Orthotics Podiatry in Roxburgh Park Melbourne | Healing Motion Podiatry',
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSiteSettings()
+
+  return {
+    metadataBase: new URL(settings.siteUrl),
+    title: {
+      default:
+        'BEST Podiatrist in Melbourne | Expert Family, Sports and Custom Orthotics Podiatry in Roxburgh Park Melbourne | Healing Motion Podiatry',
+      template: `%s | ${settings.name}`,
+    },
     description:
       'Expert Family, Sports, Custom Orthotics & Heel Pain Podiatry in Roxburgh Park Melbourne — specialise in ingrown toenails, diabetic foot care, orthotics, sports injuries, and general foot health. Shop 25E/250 Somerton Rd, Roxburgh Park VIC 3064 or Call 0415 595 956',
-    images: [{ url: '/opengraph-image.png', width: 1200, height: 630 }],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Healing Motion Podiatry | Podiatrist in Roxburgh Park, Melbourne',
-    description:
-      'Expert podiatry care in Roxburgh Park — ingrown toenails, diabetic foot care, orthotics, sports injuries, and general foot health.',
-  },
+    generator: 'v0.app',
+    keywords: [
+      'podiatrist Roxburgh Park',
+      'podiatry clinic Melbourne',
+      'ingrown toenail treatment',
+      'diabetic foot care',
+      'custom orthotics',
+      'heel pain treatment',
+      'Husein Alzurifi podiatrist',
+    ],
+    authors: [{ name: settings.name }],
+    alternates: {
+      canonical: '/',
+    },
+    openGraph: {
+      type: 'website',
+      locale: 'en_AU',
+      url: settings.siteUrl,
+      siteName: settings.name,
+      title:
+        'BEST Podiatrist in Melbourne | Expert Family, Sports and Custom Orthotics Podiatry in Roxburgh Park Melbourne | Healing Motion Podiatry',
+      description:
+        'Expert Family, Sports, Custom Orthotics & Heel Pain Podiatry in Roxburgh Park Melbourne — specialise in ingrown toenails, diabetic foot care, orthotics, sports injuries, and general foot health. Shop 25E/250 Somerton Rd, Roxburgh Park VIC 3064 or Call 0415 595 956',
+      images: [{ url: '/opengraph-image.png', width: 1200, height: 630 }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${settings.name} | Podiatrist in Roxburgh Park, Melbourne`,
+      description:
+        'Expert podiatry care in Roxburgh Park — ingrown toenails, diabetic foot care, orthotics, sports injuries, and general foot health.',
+    },
+  }
 }
 
 export const viewport: Viewport = {

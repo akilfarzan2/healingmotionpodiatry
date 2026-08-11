@@ -4,11 +4,13 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-import { faqs } from '@/lib/business-data'
+import { getFaqs } from '@/lib/sanity/data'
 
 // Content here is mirrored 1:1 in the FAQPage JSON-LD (see structured-data.tsx)
 // so answers stay consistent for both users and AI answer engines.
-export function FaqSection() {
+export async function FaqSection() {
+  const faqs = await getFaqs()
+
   return (
     <section id="faq" className="scroll-mt-16 bg-secondary/40 py-16 sm:py-24">
       <div className="mx-auto max-w-3xl px-4 sm:px-6">

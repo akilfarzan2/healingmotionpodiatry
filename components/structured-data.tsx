@@ -1,9 +1,16 @@
-import { business, faqs, fullAddress, services } from '@/lib/business-data'
+import { getFaqs, getFullAddress, getPractitioner, getServices, getSiteSettings } from '@/lib/sanity/data'
 
 // Server-rendered JSON-LD. Kept as a dedicated component so it's easy to
-// extend (e.g. BreadcrumbList) as more pages are added, and easy to swap
-// service/FAQ data for Sanity CMS content later.
-export function StructuredData() {
+// extend (e.g. BreadcrumbList) as more pages are added. Data is sourced
+// live from Sanity so structured data always matches the visible content.
+export async function StructuredData() {
+  const [settings, practitioner, services, faqs] = await Promise.all([
+    getSiteSettings(),
+    getPractitioner(),
+    getServices(),
+    getFaqs(),
+  ])
+
   const dayMap: Record<string, string> = {
     Monday: 'Monday',
     Tuesday: 'Tuesday',
@@ -17,34 +24,36 @@ export function StructuredData() {
   const medicalBusinessSchema = {
     '@context': 'https://schema.org',
     '@type': 'MedicalBusiness',
-    '@id': `${business.siteUrl}/#business`,
-    name: business.name,
-    image: `${business.siteUrl}/images/clinic-interior.png`,
-    url: business.siteUrl,
-    telephone: business.phoneIntl,
-    email: business.email,
+    '@id': `${settings.siteUrl}/#business`,
+    name: settings.name,
+    image: `${settings.siteUrl}/images/clinic-interior.png`,
+    url: settings.siteUrl,
+    telephone: settings.phoneIntl,
+    email: settings.email,
     priceRange: '$$',
     medicalSpecialty: 'Podiatric',
     address: {
       '@type': 'PostalAddress',
-      streetAddress: business.address.street,
-      addressLocality: business.address.suburb,
-      addressRegion: business.address.state,
-      postalCode: business.address.postcode,
-      addressCountry: business.address.country,
+      streetAddress: settings.address.street,
+      addressLocality: settings.address.suburb,
+      addressRegion: settings.address.state,
+      postalCode: settings.address.postcode,
+      addressCountry: settings.address.country,
     },
-    openingHoursSpecification: business.hours.map((h) => ({
-      '@type': 'OpeningHoursSpecification',
-      dayOfWeek: dayMap[h.day],
-      opens: h.open,
-      closes: h.close,
-    })),
+    openingHoursSpecification: settings.hours
+      .filter((h) => !h.closed)
+      .map((h) => ({
+        '@type': 'OpeningHoursSpecification',
+        dayOfWeek: dayMap[h.day],
+        opens: h.open,
+        closes: h.close,
+      })),
     employee: {
       '@type': 'Physician',
-      name: business.practitioner.name,
-      jobTitle: business.practitioner.title,
+      name: practitioner.name,
+      jobTitle: practitioner.title,
       medicalSpecialty: 'Podiatric',
-      worksFor: { '@id': `${business.siteUrl}/#business` },
+      worksFor: { '@id': `${settings.siteUrl}/#business` },
     },
     makesOffer: services.map((service) => ({
       '@type': 'Offer',
@@ -86,4 +95,7 @@ export function StructuredData() {
 }
 
 // Exported for reuse/debugging if needed elsewhere.
-export const businessAddressText = fullAddress
+export async function getBusinessAddressText() {
+  const settings = await getSiteSettings()
+  return getFullAddress(settings.address)
+}

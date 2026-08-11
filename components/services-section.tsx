@@ -1,11 +1,10 @@
 import { ArrowRight } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { services } from '@/lib/business-data'
+import { getServices } from '@/lib/sanity/data'
 
-// NOTE: Service content is placeholder copy for launch and is structured to
-// be swapped for Sanity CMS-managed content (with individual service pages)
-// without changing this component's shape.
-export function ServicesSection() {
+export async function ServicesSection() {
+  const services = await getServices()
+
   return (
     <section id="services" className="scroll-mt-16 bg-secondary/40 py-16 sm:py-24">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
