@@ -6,7 +6,7 @@ import { getRedirectBySource } from '@/lib/sanity/data'
 // as `redirect` documents in Sanity (see Redirects in the Studio) instead of
 // requiring a code deploy. Looked up per-request; next-sanity's client is
 // CDN-backed so this stays fast.
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl
 
   const redirect = await getRedirectBySource(pathname)
