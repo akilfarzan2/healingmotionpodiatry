@@ -1,12 +1,16 @@
 import Image from 'next/image'
 import { Badge } from '@/components/ui/badge'
-import { getPractitioner } from '@/lib/sanity/data'
+import { getHomePage } from '@/lib/sanity/data'
 import { urlForImage } from '@/lib/sanity/image'
+import { RichTextContent } from '@/components/portable-text'
 
 export async function PractitionerSection() {
-  const practitioner = await getPractitioner()
+  const homePage = await getHomePage()
+  const section = homePage?.practitionerSection
+  const practitioner = section?.member
+  if (!practitioner) return null
+
   const photoUrl = urlForImage(practitioner.photo)?.width(560).height(560).fit('crop').url()
-  const firstName = practitioner.name.split(' ')[0]
 
   return (
     <section id="practitioner" className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-24">
@@ -23,25 +27,20 @@ export async function PractitionerSection() {
 
         <div>
           <Badge variant="secondary" className="mb-3">
-            Meet your podiatrist
+            {section.heading ?? 'Meet your podiatrist'}
           </Badge>
           <h2 className="font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
             {practitioner.name}
           </h2>
-          {practitioner.title && (
-            <p className="mt-1 text-sm font-medium text-primary">{practitioner.title}</p>
+          {practitioner.credentials && (
+            <p className="mt-1 text-sm font-medium text-primary">{practitioner.credentials}</p>
           )}
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-muted-foreground text-pretty">
-            {practitioner.bio ?? (
-              <>
-                {practitioner.name} founded Healing Motion Podiatry to bring attentive,
-                evidence-based foot care to the Roxburgh Park community. With a focus on clear
-                communication and practical treatment plans, {firstName} works with patients of
-                all ages — from active athletes managing injuries to older patients needing
-                ongoing diabetic foot care.
-              </>
-            )}
-          </p>
+          {practitioner.jobTitle && !practitioner.credentials && (
+            <p className="mt-1 text-sm font-medium text-primary">{practitioner.jobTitle}</p>
+          )}
+          <div className="mt-4 max-w-2xl [&>p:first-child]:mt-0">
+            <RichTextContent value={practitioner.bio} />
+          </div>
         </div>
       </div>
     </section>

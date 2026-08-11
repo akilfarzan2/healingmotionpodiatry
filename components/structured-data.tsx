@@ -1,15 +1,17 @@
-import { getFaqs, getFullAddress, getPractitioner, getServices, getSiteSettings } from '@/lib/sanity/data'
+import { getFaqs, getFullAddress, getHomePage, getServices, getSiteSettings } from '@/lib/sanity/data'
 
 // Server-rendered JSON-LD. Kept as a dedicated component so it's easy to
 // extend (e.g. BreadcrumbList) as more pages are added. Data is sourced
 // live from Sanity so structured data always matches the visible content.
 export async function StructuredData() {
-  const [settings, practitioner, services, faqs] = await Promise.all([
+  const [settings, homePage, services, faqs] = await Promise.all([
     getSiteSettings(),
-    getPractitioner(),
+    getHomePage(),
     getServices(),
     getFaqs(),
   ])
+
+  const practitioner = homePage?.practitionerSection?.member
 
   const dayMap: Record<string, string> = {
     Monday: 'Monday',
@@ -48,13 +50,15 @@ export async function StructuredData() {
         opens: h.open,
         closes: h.close,
       })),
-    employee: {
-      '@type': 'Physician',
-      name: practitioner.name,
-      jobTitle: practitioner.title,
-      medicalSpecialty: 'Podiatric',
-      worksFor: { '@id': `${settings.siteUrl}/#business` },
-    },
+    ...(practitioner && {
+      employee: {
+        '@type': 'Physician',
+        name: practitioner.name,
+        jobTitle: practitioner.jobTitle,
+        medicalSpecialty: 'Podiatric',
+        worksFor: { '@id': `${settings.siteUrl}/#business` },
+      },
+    }),
     makesOffer: services.map((service) => ({
       '@type': 'Offer',
       itemOffered: {

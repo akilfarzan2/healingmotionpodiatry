@@ -2,22 +2,17 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Phone } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { getSiteSettings } from '@/lib/sanity/data'
-
-const navLinks = [
-  { href: '#services', label: 'Services' },
-  { href: '#about', label: 'About' },
-  { href: '#faq', label: 'FAQ' },
-  { href: '#location', label: 'Location' },
-]
+import { getMainNavigation, getSiteSettings } from '@/lib/sanity/data'
+import { resolveNavItemHref } from '@/lib/sanity/nav'
+import { NavDropdown } from '@/components/nav-dropdown'
 
 export async function SiteHeader() {
-  const settings = await getSiteSettings()
+  const [settings, nav] = await Promise.all([getSiteSettings(), getMainNavigation()])
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/80 bg-background/95 backdrop-blur-sm">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6">
-        <Link href="#top" className="flex items-center gap-2.5">
+        <Link href="/" className="flex items-center gap-2.5">
           <Image
             src="/images/logo.png"
             alt={`${settings.name} logo`}
@@ -32,15 +27,23 @@ export async function SiteHeader() {
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-6 md:flex">
-          {navLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              {link.label}
-            </a>
-          ))}
+          {nav.items.map((item, i) =>
+            item.children?.length ? (
+              // eslint-disable-next-line react/no-array-index-key
+              <NavDropdown key={i} item={item} />
+            ) : (
+              <Link
+                // eslint-disable-next-line react/no-array-index-key
+                key={i}
+                href={resolveNavItemHref(item)}
+                target={item.openInNewTab ? '_blank' : undefined}
+                rel={item.openInNewTab ? 'noopener noreferrer' : undefined}
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              >
+                {item.label}
+              </Link>
+            ),
+          )}
         </nav>
 
         <div className="flex items-center gap-2">
@@ -54,7 +57,7 @@ export async function SiteHeader() {
             <Phone data-icon="inline-start" aria-hidden="true" />
             {settings.phoneDisplay}
           </Button>
-          <Button size="sm" render={<a href="#contact" />} nativeButton={false}>
+          <Button size="sm" render={<Link href="/contact" />} nativeButton={false}>
             Book an appointment
           </Button>
         </div>
