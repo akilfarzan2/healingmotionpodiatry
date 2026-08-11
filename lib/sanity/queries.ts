@@ -156,6 +156,7 @@ export const blogPostsQuery = groq`*[_type == "blogPost"] | order(publishedDate 
   excerpt,
   featuredImage,
   publishedDate,
+  updatedDate,
   readingTime,
   featured,
   "authorName": author->name,

@@ -1,4 +1,5 @@
 import type { SanityImageSource } from '@sanity/image-url'
+import type { PortableTextBlock } from '@portabletext/react'
 import { business as fallbackBusiness } from '@/lib/business-data'
 import { client } from './client'
 import {
@@ -104,7 +105,7 @@ export type TeamMember = {
   slug?: { current: string }
   jobTitle?: string
   credentials?: string
-  bio?: PageBuilderBlock[]
+  bio?: PortableTextBlock[]
   photo?: SanityImageSource
   isPrimary?: boolean
 }
@@ -123,7 +124,7 @@ export type HomePage = {
   }
   about: {
     heading: string
-    body?: PageBuilderBlock[]
+    body?: PortableTextBlock[]
     image?: SanityImageSource
     imageAlt?: string
     points?: { title?: string; description?: string }[]
@@ -155,6 +156,7 @@ export type BlogPostSummary = {
   excerpt?: string
   featuredImage?: SanityImageSource
   publishedDate: string
+  updatedDate?: string
   readingTime?: number
   featured?: boolean
   authorName?: string
@@ -162,7 +164,7 @@ export type BlogPostSummary = {
 }
 
 export type BlogPostDetail = BlogPostSummary & {
-  tldr?: PageBuilderBlock[]
+  tldr?: PortableTextBlock[]
   body?: PageBuilderBlock[]
   sources?: { label: string; url: string }[]
   updatedDate?: string
@@ -199,7 +201,7 @@ export type ServiceAreaDetail = ServiceArea & {
 
 export type AreasHub = {
   heading?: string
-  intro?: PageBuilderBlock[]
+  intro?: PortableTextBlock[]
   featuredAreas?: ServiceArea[]
   additionalSections?: PageBuilderBlock[]
   seo?: Seo
