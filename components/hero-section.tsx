@@ -1,11 +1,15 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { Phone, MapPin, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { getFullAddress, getHeroSection, getSiteSettings } from '@/lib/sanity/data'
+import { getFullAddress, getHomePage, getSiteSettings } from '@/lib/sanity/data'
 import { urlForImage } from '@/lib/sanity/image'
 
 export async function HeroSection() {
-  const [settings, hero] = await Promise.all([getSiteSettings(), getHeroSection()])
+  const [settings, homePage] = await Promise.all([getSiteSettings(), getHomePage()])
+  const hero = homePage?.hero
+  if (!hero) return null
+
   const fullAddress = getFullAddress(settings.address)
   const heroImageUrl = urlForImage(hero.image)?.width(1200).height(1200).fit('crop').url()
 
@@ -28,18 +32,21 @@ export async function HeroSection() {
           )}
 
           <div className="flex flex-col gap-3 sm:flex-row">
-            <Button size="lg" render={<a href="#contact" />} nativeButton={false}>
-              Book an appointment
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              render={<a href={`tel:${settings.phoneIntl}`} />}
-              nativeButton={false}
-            >
-              <Phone data-icon="inline-start" aria-hidden="true" />
-              Call {settings.phoneDisplay}
-            </Button>
+            {hero.primaryButtonLabel && (
+              <Button size="lg" render={<Link href={hero.primaryButtonUrl || '/contact'} />} nativeButton={false}>
+                {hero.primaryButtonLabel}
+              </Button>
+            )}
+            {hero.secondaryButtonLabel && (
+              <Button
+                size="lg"
+                variant="outline"
+                render={<Link href={hero.secondaryButtonUrl || '/services'} />}
+                nativeButton={false}
+              >
+                {hero.secondaryButtonLabel}
+              </Button>
+            )}
           </div>
 
           <ul className="mt-2 flex flex-col gap-3 border-t border-border pt-6 sm:flex-row sm:gap-8">
@@ -56,6 +63,13 @@ export async function HeroSection() {
                 <span className="sr-only">Opening hours: </span>
                 {settings.hoursDisplay}
               </span>
+            </li>
+            <li className="flex items-start gap-2.5">
+              <Phone className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+              <a href={`tel:${settings.phoneIntl}`} className="text-sm text-muted-foreground hover:text-foreground">
+                <span className="sr-only">Phone: </span>
+                {settings.phoneDisplay}
+              </a>
             </li>
           </ul>
         </div>

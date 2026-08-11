@@ -1,14 +1,42 @@
-import { business as fallbackBusiness, faqs as fallbackFaqs, services as fallbackServices } from '@/lib/business-data'
+import type { SanityImageSource } from '@sanity/image-url'
+import { business as fallbackBusiness } from '@/lib/business-data'
 import { client } from './client'
 import {
-  aboutSectionQuery,
+  allSlugsQuery,
+  areasHubQuery,
+  blogCategoriesQuery,
+  blogPostBySlugQuery,
+  blogPostsQuery,
   faqsQuery,
-  heroSectionQuery,
-  practitionerQuery,
+  footerNavigationQuery,
+  homePageQuery,
+  mainNavigationQuery,
+  notFoundPageQuery,
+  pageBySlugQuery,
+  redirectBySourceQuery,
+  serviceAreaBySlugQuery,
+  serviceAreasQuery,
+  serviceBySlugQuery,
   servicesQuery,
   siteSettingsQuery,
+  teamMembersQuery,
+  testimonialsQuery,
 } from './queries'
-import type { SanityImageSource } from '@sanity/image-url'
+import type { ResolvedNavItem } from './nav'
+
+// A single flexible Page Builder block. Each block carries its own `_type`
+// and whatever fields that block type defines — see lib/sanity/page-builder.tsx
+// for the renderer that switches on `_type`.
+export type PageBuilderBlock = { _type: string; _key: string } & Record<string, unknown>
+
+export type Seo = {
+  metaTitle?: string
+  metaDescription?: string
+  ogImage?: SanityImageSource
+  h1?: string
+  canonicalUrl?: string
+  noIndex?: boolean
+}
 
 export type HoursEntry = {
   day: string
@@ -20,6 +48,8 @@ export type HoursEntry = {
 export type SiteSettings = {
   name: string
   legalName?: string
+  logo?: SanityImageSource
+  favicon?: SanityImageSource
   phoneDisplay: string
   phoneIntl: string
   email: string
@@ -36,48 +66,169 @@ export type SiteSettings = {
   hours: HoursEntry[]
 }
 
-export type Practitioner = {
-  name: string
-  credentials?: string
-  title?: string
-  bio?: string
-  photo?: SanityImageSource
-}
-
-export type HeroContent = {
-  badge?: string
-  headline: string
-  subheading?: string
-  image?: SanityImageSource
-  imageAlt?: string
-}
-
-export type AboutPoint = {
-  icon?: string
-  title?: string
-  description?: string
-}
-
-export type AboutContent = {
-  heading: string
-  body?: string
-  image?: SanityImageSource
-  imageAlt?: string
-  points?: AboutPoint[]
-}
-
 export type Service = {
   name: string
   slug: string
   summary?: string
   icon?: string
   order?: number
+  parentSlug?: string | null
+}
+
+export type ServiceDetail = Service & {
+  heroImage?: SanityImageSource
+  parentName?: string | null
+  body?: PageBuilderBlock[]
+  relatedServices?: Service[]
+  seo?: Seo
 }
 
 export type Faq = {
   question: string
   answer: string
   order?: number
+}
+
+export type Testimonial = {
+  authorName: string
+  authorRole?: string
+  quote: string
+  rating?: number
+  photo?: SanityImageSource
+  source?: string
+  featured?: boolean
+}
+
+export type TeamMember = {
+  name: string
+  slug?: { current: string }
+  jobTitle?: string
+  credentials?: string
+  bio?: PageBuilderBlock[]
+  photo?: SanityImageSource
+  isPrimary?: boolean
+}
+
+export type HomePage = {
+  hero: {
+    badge?: string
+    headline: string
+    subheading?: string
+    image?: SanityImageSource
+    imageAlt?: string
+    primaryButtonLabel?: string
+    primaryButtonUrl?: string
+    secondaryButtonLabel?: string
+    secondaryButtonUrl?: string
+  }
+  about: {
+    heading: string
+    body?: PageBuilderBlock[]
+    image?: SanityImageSource
+    imageAlt?: string
+    points?: { title?: string; description?: string }[]
+  }
+  servicesPreview: {
+    heading?: string
+    subheading?: string
+    services?: Service[]
+  }
+  practitionerSection: {
+    heading?: string
+    member?: TeamMember
+  }
+  faqPreview: {
+    heading?: string
+    faqs?: Faq[]
+  }
+  testimonialsSection: {
+    heading?: string
+    testimonials?: Testimonial[]
+  }
+  additionalSections?: PageBuilderBlock[]
+  seo?: Seo
+}
+
+export type BlogPostSummary = {
+  title: string
+  slug: string
+  excerpt?: string
+  featuredImage?: SanityImageSource
+  publishedDate: string
+  readingTime?: number
+  featured?: boolean
+  authorName?: string
+  categories?: { title: string; slug: string }[]
+}
+
+export type BlogPostDetail = BlogPostSummary & {
+  tldr?: PageBuilderBlock[]
+  body?: PageBuilderBlock[]
+  sources?: { label: string; url: string }[]
+  updatedDate?: string
+  showTableOfContents?: boolean
+  author?: TeamMember
+  medicalReviewer?: { reviewer?: TeamMember; reviewedDate?: string }
+  tags?: string[]
+  relatedServices?: Service[]
+  relatedPosts?: BlogPostSummary[]
+  seo?: Seo
+}
+
+export type BlogCategory = {
+  title: string
+  slug: string
+  description?: string
+}
+
+export type ServiceArea = {
+  suburb: string
+  slug: string
+  region?: string
+  postcode?: string
+  summary?: string
+  heroImage?: SanityImageSource
+  distanceFromClinic?: string
+}
+
+export type ServiceAreaDetail = ServiceArea & {
+  featuredServices?: Service[]
+  body?: PageBuilderBlock[]
+  seo?: Seo
+}
+
+export type AreasHub = {
+  heading?: string
+  intro?: PageBuilderBlock[]
+  featuredAreas?: ServiceArea[]
+  additionalSections?: PageBuilderBlock[]
+  seo?: Seo
+}
+
+export type PageDoc = {
+  title: string
+  slug: string
+  heroImage?: SanityImageSource
+  body?: PageBuilderBlock[]
+  seo?: Seo
+}
+
+export type NotFoundPageData = {
+  heading?: string
+  body?: string
+  buttonLabel?: string
+  buttonUrl?: string
+  suggestedLinks?: ResolvedNavItem[]
+}
+
+export type MainNavigation = {
+  items: ResolvedNavItem[]
+}
+
+export type FooterNavigation = {
+  columns: { heading?: string; items: ResolvedNavItem[] }[]
+  bottomText?: string
+  bottomLinks: ResolvedNavItem[]
 }
 
 const FALLBACK_SITE_SETTINGS: SiteSettings = {
@@ -92,8 +243,6 @@ const FALLBACK_SITE_SETTINGS: SiteSettings = {
   hours: fallbackBusiness.hours.map((h) => ({ ...h, closed: false })),
 }
 
-const FALLBACK_PRACTITIONER: Practitioner = fallbackBusiness.practitioner
-
 export function getFullAddress(address: SiteSettings['address']) {
   return `${address.street}, ${address.suburb} ${address.state} ${address.postcode}`
 }
@@ -103,59 +252,83 @@ export async function getSiteSettings(): Promise<SiteSettings> {
   return data ?? FALLBACK_SITE_SETTINGS
 }
 
-export async function getPractitioner(): Promise<Practitioner> {
-  const data = await client.fetch<Practitioner | null>(practitionerQuery)
-  return data ?? FALLBACK_PRACTITIONER
+export async function getMainNavigation(): Promise<MainNavigation> {
+  const data = await client.fetch<MainNavigation | null>(mainNavigationQuery)
+  return data ?? { items: [] }
 }
 
-export async function getHeroSection(): Promise<HeroContent> {
-  const data = await client.fetch<HeroContent | null>(heroSectionQuery)
-  return (
-    data ?? {
-      badge: 'Podiatrist in Roxburgh Park, Melbourne',
-      headline: 'Melbourne Podiatry That Gets You Walking Pain Free Again',
-      subheading:
-        'Healing Motion Podiatry provides evidence-based treatment for ingrown toenails, heel pain, diabetic foot care, and sports injuries — right here in Roxburgh Park.',
-      imageAlt: "Podiatrist examining a patient's foot during a consultation at Healing Motion Podiatry",
-    }
-  )
+export async function getFooterNavigation(): Promise<FooterNavigation> {
+  const data = await client.fetch<FooterNavigation | null>(footerNavigationQuery)
+  return data ?? { columns: [], bottomLinks: [] }
 }
 
-export async function getAboutSection(): Promise<AboutContent> {
-  const data = await client.fetch<AboutContent | null>(aboutSectionQuery)
-  return (
-    data ?? {
-      heading: 'Podiatry care built around your daily movement',
-      body: "Healing Motion Podiatry was founded to give Roxburgh Park and the surrounding suburbs access to thorough, unhurried foot care. Whether you're managing a chronic condition like diabetes, recovering from a sports injury, or just need a routine check-up, we take the time to explain what's going on and what we can do about it.",
-      imageAlt: 'Bright, modern waiting area inside the Healing Motion Podiatry clinic in Roxburgh Park',
-      points: [
-        {
-          icon: 'ShieldCheck',
-          title: 'Evidence-based care',
-          description: 'Every treatment plan is grounded in current podiatric best practice, not guesswork.',
-        },
-        {
-          icon: 'HeartPulse',
-          title: 'Whole-person approach',
-          description:
-            'We look at how your feet affect your posture, movement, and daily comfort — not just the symptom.',
-        },
-        {
-          icon: 'Users',
-          title: 'Local to Roxburgh Park',
-          description: 'A community clinic that gets to know you, with flexible six-day availability.',
-        },
-      ],
-    }
-  )
+export async function getHomePage(): Promise<HomePage | null> {
+  return client.fetch<HomePage | null>(homePageQuery)
 }
 
 export async function getServices(): Promise<Service[]> {
-  const data = await client.fetch<Service[]>(servicesQuery)
-  return data?.length ? data : fallbackServices.map((s, i) => ({ ...s, order: i }))
+  return client.fetch<Service[]>(servicesQuery)
+}
+
+export async function getServiceBySlug(slug: string): Promise<ServiceDetail | null> {
+  return client.fetch<ServiceDetail | null>(serviceBySlugQuery, { slug })
 }
 
 export async function getFaqs(): Promise<Faq[]> {
-  const data = await client.fetch<Faq[]>(faqsQuery)
-  return data?.length ? data : fallbackFaqs.map((f, i) => ({ ...f, order: i }))
+  return client.fetch<Faq[]>(faqsQuery)
+}
+
+export async function getTestimonials(): Promise<Testimonial[]> {
+  return client.fetch<Testimonial[]>(testimonialsQuery)
+}
+
+export async function getTeamMembers(): Promise<TeamMember[]> {
+  return client.fetch<TeamMember[]>(teamMembersQuery)
+}
+
+export async function getBlogPosts(): Promise<BlogPostSummary[]> {
+  return client.fetch<BlogPostSummary[]>(blogPostsQuery)
+}
+
+export async function getBlogPostBySlug(slug: string): Promise<BlogPostDetail | null> {
+  return client.fetch<BlogPostDetail | null>(blogPostBySlugQuery, { slug })
+}
+
+export async function getBlogCategories(): Promise<BlogCategory[]> {
+  return client.fetch<BlogCategory[]>(blogCategoriesQuery)
+}
+
+export async function getServiceAreas(): Promise<ServiceArea[]> {
+  return client.fetch<ServiceArea[]>(serviceAreasQuery)
+}
+
+export async function getServiceAreaBySlug(slug: string): Promise<ServiceAreaDetail | null> {
+  return client.fetch<ServiceAreaDetail | null>(serviceAreaBySlugQuery, { slug })
+}
+
+export async function getAreasHub(): Promise<AreasHub | null> {
+  return client.fetch<AreasHub | null>(areasHubQuery)
+}
+
+export async function getPageBySlug(slug: string): Promise<PageDoc | null> {
+  return client.fetch<PageDoc | null>(pageBySlugQuery, { slug })
+}
+
+export async function getNotFoundPage(): Promise<NotFoundPageData | null> {
+  return client.fetch<NotFoundPageData | null>(notFoundPageQuery)
+}
+
+export async function getRedirectBySource(
+  source: string,
+): Promise<{ source: string; destination: string; permanent?: boolean } | null> {
+  return client.fetch(redirectBySourceQuery, { source })
+}
+
+export async function getAllSlugs(): Promise<{
+  services: string[]
+  posts: string[]
+  areas: string[]
+  pages: string[]
+}> {
+  return client.fetch(allSlugsQuery)
 }

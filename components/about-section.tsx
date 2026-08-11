@@ -1,16 +1,16 @@
 import Image from 'next/image'
 import { HeartPulse, ShieldCheck, Users, type LucideIcon } from 'lucide-react'
-import { getAboutSection } from '@/lib/sanity/data'
+import { getHomePage } from '@/lib/sanity/data'
 import { urlForImage } from '@/lib/sanity/image'
+import { RichTextContent } from '@/components/portable-text'
 
-const iconMap: Record<string, LucideIcon> = {
-  ShieldCheck,
-  HeartPulse,
-  Users,
-}
+const iconCycle: LucideIcon[] = [ShieldCheck, HeartPulse, Users]
 
 export async function AboutSection() {
-  const about = await getAboutSection()
+  const homePage = await getHomePage()
+  const about = homePage?.about
+  if (!about) return null
+
   const aboutImageUrl = urlForImage(about.image)?.width(1000).height(750).fit('crop').url()
   const points = about.points ?? []
 
@@ -32,28 +32,22 @@ export async function AboutSection() {
             <h2 className="font-heading text-3xl font-bold tracking-tight text-foreground text-balance sm:text-4xl">
               {about.heading}
             </h2>
-            {about.body && (
-              <p className="mt-4 text-base leading-relaxed text-muted-foreground text-pretty">
-                {about.body}
-              </p>
-            )}
+            <div className="[&>p:first-child]:mt-4">
+              <RichTextContent value={about.body} />
+            </div>
           </div>
 
           <ul className="flex flex-col gap-5">
-            {points.map((point) => {
-              const Icon = (point.icon && iconMap[point.icon]) || ShieldCheck
+            {points.map((point, index) => {
+              const Icon = iconCycle[index % iconCycle.length]
               return (
                 <li key={point.title} className="flex items-start gap-4">
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </span>
                   <div>
-                    <p className="font-heading text-base font-semibold text-foreground">
-                      {point.title}
-                    </p>
-                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
-                      {point.description}
-                    </p>
+                    <p className="font-heading text-base font-semibold text-foreground">{point.title}</p>
+                    <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{point.description}</p>
                   </div>
                 </li>
               )
