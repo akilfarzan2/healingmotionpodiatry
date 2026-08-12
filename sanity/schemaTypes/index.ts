@@ -18,6 +18,27 @@ import { teamMember } from './documents/teamMember'
 import { testimonial } from './documents/testimonial'
 import { aboutPoint } from './objects/aboutPoint'
 import { navItem } from './objects/navItem'
+import {
+  beforeAfter,
+  columns,
+  ctaBanner,
+  customEmbed,
+  divider,
+  faqAccordionBlock,
+  gallery,
+  imageBlock,
+  logoCloud,
+  mapEmbed,
+  pageBuilder,
+  pricingTable,
+  quote,
+  richTextBlock,
+  stats,
+  tabs,
+  teamGrid,
+  testimonialsBlock,
+  videoEmbed,
+} from './objects/pageBuilder'
 import { seo } from './objects/seo'
 
 export const schemaTypes: SchemaTypeDefinition[] = [
@@ -35,9 +56,7 @@ export const schemaTypes: SchemaTypeDefinition[] = [
 
   // Services — fully migrated. Service and Service Area remain normal
   // collections (default "+ Create" behavior); Areas We Serve (Hub Page)
-  // is locked as a singleton in structure.ts. Each type's page-builder
-  // "body"/"additionalSections" field is deferred to a future Page Builder
-  // migration pass, same as Home Page's Additional Sections.
+  // is locked as a singleton in structure.ts.
   service,
   serviceArea,
   areasHub,
@@ -48,14 +67,14 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   teamMember,
 
   // Blog — fully migrated, normal collections grouped under "Blog" in
-  // structure.ts. Blog Post's page-builder "body" field is deferred to a
-  // future Page Builder migration pass, same as Home Page/Services.
+  // structure.ts.
   blogPost,
   blogCategory,
 
   // Site Content / Misc — fully migrated, normal collections grouped under
-  // "Site Content" in structure.ts. Page's "body" field is deferred the
-  // same way as Home Page/Services/Blog Post.
+  // "Site Content" in structure.ts. "Page" itself gets its own top-level
+  // spot in structure.ts (not nested under Site Content) since editors can
+  // freely place it anywhere in the nav.
   page,
   faq,
   testimonial,
@@ -65,4 +84,28 @@ export const schemaTypes: SchemaTypeDefinition[] = [
   navItem,
   seo,
   aboutPoint,
+
+  // Page Builder — the flexible block editor used for "body" on
+  // Service/Service Area/Blog Post/Page and "additionalSections" on Home
+  // Page/Areas hub. Each block type must be registered individually before
+  // the `pageBuilder` array type that references them.
+  richTextBlock,
+  imageBlock,
+  gallery,
+  videoEmbed,
+  columns,
+  stats,
+  testimonialsBlock,
+  faqAccordionBlock,
+  ctaBanner,
+  quote,
+  beforeAfter,
+  teamGrid,
+  pricingTable,
+  mapEmbed,
+  tabs,
+  divider,
+  logoCloud,
+  customEmbed,
+  pageBuilder,
 ]

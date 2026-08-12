@@ -7,6 +7,7 @@ import { Breadcrumbs } from '@/components/breadcrumbs'
 import { PageBuilder } from '@/components/page-builder'
 import { Button } from '@/components/ui/button'
 import { getAllSlugs, getServiceBySlug, getSiteSettings } from '@/lib/sanity/data'
+// getSiteSettings is reused for both generateMetadata and the page body below
 import { urlForImage } from '@/lib/sanity/image'
 import { buildMetadata } from '@/lib/sanity/metadata'
 
@@ -39,14 +40,27 @@ export default async function ServiceDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const service = await getServiceBySlug(slug)
+  const [settings, service] = await Promise.all([getSiteSettings(), getServiceBySlug(slug)])
   if (!service) notFound()
 
   const heroImageUrl = urlForImage(service.heroImage)?.width(1400).height(700).fit('crop').url()
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'MedicalProcedure',
+    name: service.name,
+    description: service.answerCapsule || service.summary,
+    url: `${settings.siteUrl}/services/${slug}`,
+    ...(service.parentName && { subjectOf: { '@type': 'MedicalProcedure', name: service.parentName } }),
+    performedBy: { '@type': 'MedicalBusiness', name: settings.name, url: settings.siteUrl },
+  }
+
   return (
     <>
       <main className="mx-auto max-w-4xl px-4 py-14 sm:px-6 sm:py-20">
+        {/* eslint-disable-next-line react/no-danger */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
         <Breadcrumbs
           items={[
             { label: 'Services', href: '/services' },
@@ -74,6 +88,17 @@ export default async function ServiceDetailPage({
               sizes="(min-width: 1024px) 850px, 100vw"
               className="object-cover"
             />
+          </div>
+        )}
+
+        {service.answerCapsule && (
+          <div className="mt-8 rounded-2xl border border-primary/20 bg-primary/5 p-6">
+            <p className="font-heading text-sm font-semibold uppercase tracking-wide text-primary">
+              In short
+            </p>
+            <p className="mt-2 text-base leading-relaxed text-foreground text-pretty">
+              {service.answerCapsule}
+            </p>
           </div>
         )}
 

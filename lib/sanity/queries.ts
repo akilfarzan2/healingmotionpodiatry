@@ -23,10 +23,38 @@ const navItemProjection = /* groq */ `
   }
 `
 
+// Resolves an internal-link mark's reference down to a type + slug so the
+// frontend (see resolveInternalHref in lib/sanity/nav.ts) can build an href
+// without an extra lookup. Reused for every rich-text field that supports
+// internal linking (the richText block, and the nested body/content arrays
+// inside the columns and tabs blocks).
+const richTextProjection = /* groq */ `
+  ...,
+  markDefs[]{
+    ...,
+    _type == "internalLink" => {
+      ...,
+      "internalType": reference->_type,
+      "internalSlug": reference->slug.current
+    }
+  }
+`
+
 // Expands the flexible Page Builder array. Reference-bearing blocks are
 // dereferenced here so pages/services/posts/areas can all reuse this fragment.
 const pageBuilderProjection = /* groq */ `
   ...,
+  _type == "richText" => {
+    content[]{ ${richTextProjection} }
+  },
+  _type == "columns" => {
+    heading,
+    items[]{ ..., body[]{ ${richTextProjection} } }
+  },
+  _type == "tabs" => {
+    heading,
+    items[]{ ..., content[]{ ${richTextProjection} } }
+  },
   _type == "testimonialsBlock" => { heading, testimonials[]-> },
   _type == "faqAccordionBlock" => { heading, faqs[]-> },
   _type == "teamGrid" => { heading, members[]-> }
@@ -117,6 +145,7 @@ export const serviceBySlugQuery = groq`*[_type == "service" && slug.current == $
   heroImage,
   "parentName": parentService->name,
   "parentSlug": parentService->slug.current,
+  answerCapsule,
   body[]{
     ${pageBuilderProjection}
   },
@@ -214,6 +243,7 @@ export const serviceAreaBySlugQuery = groq`*[_type == "serviceArea" && slug.curr
   heroImage,
   distanceFromClinic,
   "featuredServices": featuredServices[]->{ name, "slug": slug.current, summary },
+  answerCapsule,
   body[]{
     ${pageBuilderProjection}
   },
@@ -233,7 +263,9 @@ export const areasHubQuery = groq`*[_type == "areasHub"][0]{
 export const pageBySlugQuery = groq`*[_type == "page" && slug.current == $slug][0]{
   title,
   "slug": slug.current,
+  template,
   heroImage,
+  answerCapsule,
   body[]{
     ${pageBuilderProjection}
   },

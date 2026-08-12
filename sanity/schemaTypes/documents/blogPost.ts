@@ -45,20 +45,13 @@ export const blogPost = defineType({
         'A short bullet list summarizing the post. This is what AI answer engines and featured snippets often pull from — keep it clear and factual.',
     }),
 
-    // Body Content — the real field is a flexible Page Builder with 18
-    // block types that hasn't been migrated yet. Intentionally left out of
-    // this schema entirely (rather than redeclared with a mismatched type)
-    // so its existing stored content is untouched and safe — it just
-    // isn't editable here yet.
     defineField({
-      name: 'bodyNotice',
+      name: 'body',
       title: 'Body Content',
       description:
-        'Not yet migrated to this Studio — still edited in the original Studio for now. Existing content is preserved and unaffected. A dedicated Page Builder migration pass will bring the full block editor here next.',
-      type: 'string',
+        'Full creative freedom — rich text with headings, lists, internal/external links, images, tables, plus 17 other content blocks (galleries, video, FAQs, CTAs, testimonials, and more).',
+      type: 'pageBuilder',
       group: 'content',
-      readOnly: true,
-      initialValue: 'Edit the article body for this post in the original Studio for now.',
     }),
 
     defineField({

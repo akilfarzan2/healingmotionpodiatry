@@ -26,20 +26,38 @@ export const page = defineType({
       fields: [defineField({ name: 'alt', title: 'Alt Text', type: 'string' })],
     }),
 
-    // Page Content — the real field ("body") is a flexible Page Builder
-    // with 18 block types that hasn't been migrated yet. Intentionally
-    // left out of this schema entirely (rather than redeclared with a
-    // mismatched type) so its existing stored content is untouched and
-    // safe — it just isn't editable here yet.
     defineField({
-      name: 'bodyNotice',
-      title: 'Page Content',
+      name: 'template',
+      title: 'Template',
       description:
-        'Not yet migrated to this Studio — still edited in the original Studio for now. Existing content is preserved and unaffected. A dedicated Page Builder migration pass will bring the full block editor here next.',
+        'Purely organizational — helps you tell apart short legal/utility pages from full custom landing pages when browsing the Pages list. Does not change rendering.',
       type: 'string',
       group: 'content',
-      readOnly: true,
-      initialValue: 'Edit "Page Content" for this page in the original Studio for now.',
+      options: {
+        list: [
+          { title: 'Standard (e.g. About, Privacy Policy, Terms)', value: 'standard' },
+          { title: 'Landing Page (custom, marketing-driven)', value: 'landing' },
+        ],
+      },
+      initialValue: 'standard',
+    }),
+
+    defineField({
+      name: 'body',
+      title: 'Page Content',
+      description:
+        'Full creative freedom — rich text with headings, lists, internal/external links, images, tables, plus 17 other content blocks (galleries, video, FAQs, CTAs, testimonials, and more). This is a completely blank canvas: use it for anything that does not belong under Services, Blog, or a fixed section — About, Privacy Policy, Terms, Careers, or a one-off landing page.',
+      type: 'pageBuilder',
+      group: 'content',
+    }),
+    defineField({
+      name: 'answerCapsule',
+      title: 'Answer Capsule',
+      description:
+        'Optional — a short, self-contained direct-answer summary placed at the top of the page for AI answer engines to quote. Most useful on informational pages (About, FAQ-style pages); skip it for purely legal pages.',
+      type: 'text',
+      rows: 3,
+      group: 'content',
     }),
 
     defineField({

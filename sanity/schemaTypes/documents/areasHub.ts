@@ -33,20 +33,13 @@ export const areasHub = defineType({
       group: 'content',
     }),
 
-    // Additional Sections — the real field is a flexible Page Builder with
-    // 18 block types that hasn't been migrated yet. It's intentionally left
-    // out of this schema entirely (rather than redeclared with a mismatched
-    // type) so its existing stored content is untouched and safe — it just
-    // isn't editable here yet.
     defineField({
-      name: 'additionalSectionsNotice',
+      name: 'additionalSections',
       title: 'Additional Sections',
       description:
-        'Not yet migrated to this Studio — still edited in the original Studio for now. Existing content is preserved and unaffected. A dedicated Page Builder migration pass will bring the full block editor here next.',
-      type: 'string',
+        'Extra flexible content rendered below the areas list — any mix of the 18 Page Builder blocks (rich text, galleries, stats, CTAs, testimonials, and more).',
+      type: 'pageBuilder',
       group: 'more',
-      readOnly: true,
-      initialValue: 'Edit "Additional Sections" content in the original Studio for now.',
     }),
 
     defineField({ name: 'seo', title: 'SEO', type: 'seo', group: 'seo' }),

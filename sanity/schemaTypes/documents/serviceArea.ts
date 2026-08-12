@@ -69,20 +69,22 @@ export const serviceArea = defineType({
       group: 'content',
     }),
 
-    // Page Content — the real field ("body") is a flexible Page Builder
-    // with 18 block types that hasn't been migrated yet. It's intentionally
-    // left out of this schema entirely (rather than redeclared with a
-    // mismatched type) so its existing stored content is untouched and
-    // safe — it just isn't editable here yet.
     defineField({
-      name: 'bodyNotice',
+      name: 'body',
       title: 'Page Content',
       description:
-        'Not yet migrated to this Studio — still edited in the original Studio for now. Existing content is preserved and unaffected. A dedicated Page Builder migration pass will bring the full block editor here next.',
-      type: 'string',
+        'Full creative freedom — rich text with headings, lists, internal/external links, images, tables, plus 17 other content blocks (galleries, video, FAQs, CTAs, testimonials, and more).',
+      type: 'pageBuilder',
       group: 'more',
-      readOnly: true,
-      initialValue: 'Edit "Page Content" for this area in the original Studio for now.',
+    }),
+    defineField({
+      name: 'answerCapsule',
+      title: 'Answer Capsule',
+      description:
+        'A short, self-contained direct answer (40–80 words) to "Do you have a podiatrist in [suburb]?" — placed at the top of the page for AI answer engines to quote directly.',
+      type: 'text',
+      rows: 3,
+      group: 'more',
     }),
 
     defineField({ name: 'seo', title: 'SEO', type: 'seo', group: 'seo' }),

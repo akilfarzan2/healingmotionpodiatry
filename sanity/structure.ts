@@ -28,6 +28,11 @@ const GROUPED_COLLECTION_TYPES = [
   'testimonial',
   'redirect',
 ]
+// "Page" gets its own top-level spot (see below) rather than nesting under
+// "Site Content" — pages are freestanding documents that can be linked from
+// anywhere in the nav (their own top-level dropdown, the footer, buried
+// under another section, or not linked at all), so they shouldn't read as
+// scoped to "Site Content" alongside FAQs/Testimonials/Redirects.
 const HIDDEN_FROM_FLAT_LIST = [...SINGLETON_TYPES, ...GROUPED_COLLECTION_TYPES]
 
 /**
@@ -111,13 +116,18 @@ export const structure: StructureResolver = (S) =>
             ]),
         ),
 
+      // Its own top-level category: freeform "Page" documents (About,
+      // Privacy Policy, Terms, Careers, one-off landing pages, etc.) that
+      // aren't Services or Blog Posts. Each has the same full Page Builder
+      // freedom and can be linked from anywhere in the nav independently.
+      S.documentTypeListItem('page').title('Pages'),
+
       S.listItem()
         .title('Site Content')
         .child(
           S.list()
             .title('Site Content')
             .items([
-              S.documentTypeListItem('page').title('Page'),
               S.documentTypeListItem('faq').title('FAQ'),
               S.documentTypeListItem('testimonial').title('Testimonial'),
               S.documentTypeListItem('redirect').title('Redirect'),

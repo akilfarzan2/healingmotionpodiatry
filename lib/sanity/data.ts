@@ -79,6 +79,7 @@ export type Service = {
 export type ServiceDetail = Service & {
   heroImage?: SanityImageSource
   parentName?: string | null
+  answerCapsule?: string
   body?: PageBuilderBlock[]
   relatedServices?: Service[]
   seo?: Seo
@@ -195,6 +196,7 @@ export type ServiceArea = {
 
 export type ServiceAreaDetail = ServiceArea & {
   featuredServices?: Service[]
+  answerCapsule?: string
   body?: PageBuilderBlock[]
   seo?: Seo
 }
@@ -210,7 +212,9 @@ export type AreasHub = {
 export type PageDoc = {
   title: string
   slug: string
+  template?: 'standard' | 'landing'
   heroImage?: SanityImageSource
+  answerCapsule?: string
   body?: PageBuilderBlock[]
   seo?: Seo
 }
