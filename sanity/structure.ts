@@ -12,7 +12,7 @@ const CogIcon = () => createElement(Icon, { symbol: 'cog' })
 // Document types pulled into custom singleton items below. Everything else
 // is rendered with the default per-type list further down, unchanged.
 const SITE_CONFIG_TYPES = ['siteSettings', 'mainNavigation', 'footerNavigation', 'notFoundPage']
-const SINGLETON_TYPES = [...SITE_CONFIG_TYPES, 'homePage']
+const SINGLETON_TYPES = [...SITE_CONFIG_TYPES, 'homePage', 'areasHub']
 
 /**
  * Existing document IDs for each singleton. Pinning to these exact IDs
@@ -25,6 +25,7 @@ const MAIN_NAVIGATION_ID = 'edd4e49e-bc82-424b-b3bb-5d9162150199'
 const FOOTER_NAVIGATION_ID = 'e80fc844-220b-45d3-8d44-9086d28bf6b6'
 const NOT_FOUND_PAGE_ID = '14ab7656-db4e-4536-b16d-a3e558ddc3d6'
 const HOME_PAGE_ID = '39e7c8e6-ddb6-4330-bcf9-d73cb3744f81'
+const AREAS_HUB_ID = '10ef321c-4d66-4306-82f6-3ebcac3ef12d'
 
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -57,6 +58,20 @@ export const structure: StructureResolver = (S) =>
       S.listItem()
         .title('Home Page')
         .child(S.document().schemaType('homePage').documentId(HOME_PAGE_ID)),
+
+      S.listItem()
+        .title('Services')
+        .child(
+          S.list()
+            .title('Services')
+            .items([
+              S.documentTypeListItem('service').title('Service'),
+              S.documentTypeListItem('serviceArea').title('Service Area'),
+              S.listItem()
+                .title('Areas We Serve (Hub Page)')
+                .child(S.document().schemaType('areasHub').documentId(AREAS_HUB_ID)),
+            ]),
+        ),
 
       S.divider(),
 

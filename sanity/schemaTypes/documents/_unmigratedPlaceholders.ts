@@ -36,14 +36,11 @@ function placeholder(name: string, title: string) {
   })
 }
 
-export const areasHub = placeholder('areasHub', 'Areas We Serve (Hub Page)')
 export const blogCategory = placeholder('blogCategory', 'Blog Category')
 export const blogPost = placeholder('blogPost', 'Blog Post')
 export const faq = placeholder('faq', 'FAQ')
 export const page = placeholder('page', 'Page')
 export const practitioner = placeholder('practitioner', 'Practitioner')
 export const redirect = placeholder('redirect', 'Redirect')
-export const service = placeholder('service', 'Service')
-export const serviceArea = placeholder('serviceArea', 'Service Area')
 export const teamMember = placeholder('teamMember', 'Team Member')
 export const testimonial = placeholder('testimonial', 'Testimonial')
