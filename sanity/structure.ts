@@ -1,10 +1,17 @@
+import { createElement } from 'react'
+
 import { Icon } from '@sanity/icons'
 import type { StructureResolver } from 'sanity/structure'
 
-// This version of @sanity/icons only exposes named icons through the
-// generic `Icon` component (via a lazy-loaded symbol map), not as
-// individually importable PascalCase components.
-const CogIcon = () => Icon({ symbol: 'cog' })
+// This version of @sanity/icons only ships a single generic `Icon`
+// component (rendered with a `symbol` prop), not individually importable
+// PascalCase icon components. It must be rendered as a component via
+// createElement/JSX — calling it directly as a plain function crashes.
+const CogIcon = () => createElement(Icon, { symbol: 'cog' })
+
+// Document types grouped under "Site Configuration" below. Everything else
+// is rendered with the default per-type list further down, unchanged.
+const SITE_CONFIG_TYPES = ['siteSettings', 'mainNavigation', 'footerNavigation', 'notFoundPage']
 
 /**
  * Existing document IDs for the four Site Configuration singletons.
@@ -45,6 +52,13 @@ export const structure: StructureResolver = (S) =>
             ]),
         ),
 
-      // Everything else is still managed in the original Studio and is
-      // intentionally left out of this sidebar until it's migrated.
+      S.divider(),
+
+      // Everything else, unchanged: one flat list item per remaining
+      // document type, each with the default "+ Create" / list behavior.
+      // Not yet migrated to a custom structure — still edited the same
+      // way as before, just now living in this Studio too.
+      ...S.documentTypeListItems().filter(
+        (listItem) => !SITE_CONFIG_TYPES.includes(listItem.getId() ?? ''),
+      ),
     ])
