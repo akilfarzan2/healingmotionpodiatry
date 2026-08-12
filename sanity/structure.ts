@@ -13,6 +13,22 @@ const CogIcon = () => createElement(Icon, { symbol: 'cog' })
 // is rendered with the default per-type list further down, unchanged.
 const SITE_CONFIG_TYPES = ['siteSettings', 'mainNavigation', 'footerNavigation', 'notFoundPage']
 const SINGLETON_TYPES = [...SITE_CONFIG_TYPES, 'homePage', 'areasHub']
+// Non-singleton document types that are nested under a custom group item
+// below (e.g. Service/Service Area under "Services") and therefore must
+// also be excluded from the flat fallback list, or they'd render twice.
+const GROUPED_COLLECTION_TYPES = [
+  'service',
+  'serviceArea',
+  'practitioner',
+  'teamMember',
+  'blogPost',
+  'blogCategory',
+  'page',
+  'faq',
+  'testimonial',
+  'redirect',
+]
+const HIDDEN_FROM_FLAT_LIST = [...SINGLETON_TYPES, ...GROUPED_COLLECTION_TYPES]
 
 /**
  * Existing document IDs for each singleton. Pinning to these exact IDs
@@ -73,6 +89,41 @@ export const structure: StructureResolver = (S) =>
             ]),
         ),
 
+      S.listItem()
+        .title('People')
+        .child(
+          S.list()
+            .title('People')
+            .items([
+              S.documentTypeListItem('practitioner').title('Practitioner'),
+              S.documentTypeListItem('teamMember').title('Team Member'),
+            ]),
+        ),
+
+      S.listItem()
+        .title('Blog')
+        .child(
+          S.list()
+            .title('Blog')
+            .items([
+              S.documentTypeListItem('blogPost').title('Blog Post'),
+              S.documentTypeListItem('blogCategory').title('Blog Category'),
+            ]),
+        ),
+
+      S.listItem()
+        .title('Site Content')
+        .child(
+          S.list()
+            .title('Site Content')
+            .items([
+              S.documentTypeListItem('page').title('Page'),
+              S.documentTypeListItem('faq').title('FAQ'),
+              S.documentTypeListItem('testimonial').title('Testimonial'),
+              S.documentTypeListItem('redirect').title('Redirect'),
+            ]),
+        ),
+
       S.divider(),
 
       // Everything else, unchanged: one flat list item per remaining
@@ -80,6 +131,6 @@ export const structure: StructureResolver = (S) =>
       // Not yet migrated to a custom structure — still edited the same
       // way as before, just now living in this Studio too.
       ...S.documentTypeListItems().filter(
-        (listItem) => !SINGLETON_TYPES.includes(listItem.getId() ?? ''),
+        (listItem) => !HIDDEN_FROM_FLAT_LIST.includes(listItem.getId() ?? ''),
       ),
     ])

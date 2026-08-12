@@ -36,11 +36,7 @@ function placeholder(name: string, title: string) {
   })
 }
 
-export const blogCategory = placeholder('blogCategory', 'Blog Category')
-export const blogPost = placeholder('blogPost', 'Blog Post')
-export const faq = placeholder('faq', 'FAQ')
-export const page = placeholder('page', 'Page')
-export const practitioner = placeholder('practitioner', 'Practitioner')
-export const redirect = placeholder('redirect', 'Redirect')
-export const teamMember = placeholder('teamMember', 'Team Member')
-export const testimonial = placeholder('testimonial', 'Testimonial')
+// All document types that previously needed a placeholder here have now
+// been migrated to their own real schema files. This file is kept in place
+// (empty of placeholders) as the pattern to follow for any future type that
+// still needs one before its own migration pass.
