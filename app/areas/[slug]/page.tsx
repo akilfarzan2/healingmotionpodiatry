@@ -39,13 +39,29 @@ export default async function ServiceAreaPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const area = await getServiceAreaBySlug(slug)
+  const [settings, area] = await Promise.all([getSiteSettings(), getServiceAreaBySlug(slug)])
   if (!area) notFound()
 
   const heroImageUrl = urlForImage(area.heroImage)?.width(1400).height(700).fit('crop').url()
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'MedicalBusiness',
+    name: settings.name,
+    url: `${settings.siteUrl}/areas/${slug}`,
+    telephone: settings.phoneIntl,
+    areaServed: {
+      '@type': 'City',
+      name: area.suburb,
+      ...(area.postcode && { postalCode: area.postcode }),
+    },
+  }
+
   return (
     <main className="mx-auto max-w-4xl px-4 py-14 sm:px-6 sm:py-20">
+      {/* eslint-disable-next-line react/no-danger */}
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
       <Breadcrumbs items={[{ label: 'Areas we serve', href: '/areas' }, { label: area.suburb }]} />
 
       <h1 className="mt-6 font-heading text-4xl font-bold tracking-tight text-foreground text-balance sm:text-5xl">
@@ -70,6 +86,15 @@ export default async function ServiceAreaPage({
             sizes="(min-width: 1024px) 850px, 100vw"
             className="object-cover"
           />
+        </div>
+      )}
+
+      {area.answerCapsule && (
+        <div className="mt-8 rounded-2xl border border-primary/20 bg-primary/5 p-6">
+          <p className="font-heading text-sm font-semibold uppercase tracking-wide text-primary">
+            In short
+          </p>
+          <p className="mt-2 text-base leading-relaxed text-foreground text-pretty">{area.answerCapsule}</p>
         </div>
       )}
 

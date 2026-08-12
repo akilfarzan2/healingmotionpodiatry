@@ -1,5 +1,7 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { PortableText, type PortableTextComponents, type PortableTextBlock } from '@portabletext/react'
+import { resolveInternalHref } from '@/lib/sanity/nav'
 import { urlForImage } from '@/lib/sanity/image'
 
 // Turns heading text into a stable, URL-safe anchor id so the blog Table of
@@ -68,6 +70,24 @@ const components: PortableTextComponents = {
       <code className="rounded bg-muted px-1.5 py-0.5 font-mono text-sm text-foreground">{children}</code>
     ),
     'strike-through': ({ children }) => <span className="line-through">{children}</span>,
+    link: ({ value, children }) => (
+      <a
+        href={value?.href}
+        target={value?.openInNewTab ? '_blank' : undefined}
+        rel={value?.openInNewTab ? 'noopener noreferrer' : undefined}
+        className="text-primary underline underline-offset-2 hover:text-primary/80"
+      >
+        {children}
+      </a>
+    ),
+    internalLink: ({ value, children }) => (
+      <Link
+        href={resolveInternalHref(value?.internalType, value?.internalSlug)}
+        className="text-primary underline underline-offset-2 hover:text-primary/80"
+      >
+        {children}
+      </Link>
+    ),
   },
   types: {
     image: ({ value }) => {

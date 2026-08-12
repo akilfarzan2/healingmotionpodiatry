@@ -7,7 +7,6 @@ import { Breadcrumbs } from '@/components/breadcrumbs'
 import { PageBuilder } from '@/components/page-builder'
 import { Button } from '@/components/ui/button'
 import { getAllSlugs, getServiceBySlug, getSiteSettings } from '@/lib/sanity/data'
-// getSiteSettings is reused for both generateMetadata and the page body below
 import { urlForImage } from '@/lib/sanity/image'
 import { buildMetadata } from '@/lib/sanity/metadata'
 

@@ -69,6 +69,17 @@ export default async function GenericPage({
           </div>
         )}
 
+        {page.answerCapsule && (
+          <div className="mt-8 rounded-2xl border border-primary/20 bg-primary/5 p-6">
+            <p className="font-heading text-sm font-semibold uppercase tracking-wide text-primary">
+              In short
+            </p>
+            <p className="mt-2 text-base leading-relaxed text-foreground text-pretty">
+              {page.answerCapsule}
+            </p>
+          </div>
+        )}
+
         <div className="mt-8">
           <PageBuilder blocks={page.body} />
         </div>
