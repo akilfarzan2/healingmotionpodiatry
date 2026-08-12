@@ -9,20 +9,22 @@ import type { StructureResolver } from 'sanity/structure'
 // createElement/JSX — calling it directly as a plain function crashes.
 const CogIcon = () => createElement(Icon, { symbol: 'cog' })
 
-// Document types grouped under "Site Configuration" below. Everything else
+// Document types pulled into custom singleton items below. Everything else
 // is rendered with the default per-type list further down, unchanged.
 const SITE_CONFIG_TYPES = ['siteSettings', 'mainNavigation', 'footerNavigation', 'notFoundPage']
+const SINGLETON_TYPES = [...SITE_CONFIG_TYPES, 'homePage']
 
 /**
- * Existing document IDs for the four Site Configuration singletons.
- * Pinning to these exact IDs (instead of a document type list) removes
- * the "+ Create" action and makes it impossible to create a second,
- * duplicate document of the same type.
+ * Existing document IDs for each singleton. Pinning to these exact IDs
+ * (instead of a document type list) removes the "+ Create" action and
+ * makes it impossible to create a second, duplicate document of the
+ * same type.
  */
 const SITE_SETTINGS_ID = '028bc799-5c07-4c06-969d-ce3d9b1ae776'
 const MAIN_NAVIGATION_ID = 'edd4e49e-bc82-424b-b3bb-5d9162150199'
 const FOOTER_NAVIGATION_ID = 'e80fc844-220b-45d3-8d44-9086d28bf6b6'
 const NOT_FOUND_PAGE_ID = '14ab7656-db4e-4536-b16d-a3e558ddc3d6'
+const HOME_PAGE_ID = '39e7c8e6-ddb6-4330-bcf9-d73cb3744f81'
 
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -52,6 +54,10 @@ export const structure: StructureResolver = (S) =>
             ]),
         ),
 
+      S.listItem()
+        .title('Home Page')
+        .child(S.document().schemaType('homePage').documentId(HOME_PAGE_ID)),
+
       S.divider(),
 
       // Everything else, unchanged: one flat list item per remaining
@@ -59,6 +65,6 @@ export const structure: StructureResolver = (S) =>
       // Not yet migrated to a custom structure — still edited the same
       // way as before, just now living in this Studio too.
       ...S.documentTypeListItems().filter(
-        (listItem) => !SITE_CONFIG_TYPES.includes(listItem.getId() ?? ''),
+        (listItem) => !SINGLETON_TYPES.includes(listItem.getId() ?? ''),
       ),
     ])

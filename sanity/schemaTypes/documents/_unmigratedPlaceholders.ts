@@ -36,13 +36,10 @@ function placeholder(name: string, title: string) {
   })
 }
 
-export const aboutSection = placeholder('aboutSection', 'About Section')
 export const areasHub = placeholder('areasHub', 'Areas We Serve (Hub Page)')
 export const blogCategory = placeholder('blogCategory', 'Blog Category')
 export const blogPost = placeholder('blogPost', 'Blog Post')
 export const faq = placeholder('faq', 'FAQ')
-export const heroSection = placeholder('heroSection', 'Hero Section')
-export const homePage = placeholder('homePage', 'Home Page')
 export const page = placeholder('page', 'Page')
 export const practitioner = placeholder('practitioner', 'Practitioner')
 export const redirect = placeholder('redirect', 'Redirect')
