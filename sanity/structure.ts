@@ -1,5 +1,10 @@
-import { CogIcon } from '@sanity/icons'
+import { Icon } from '@sanity/icons'
 import type { StructureResolver } from 'sanity/structure'
+
+// This version of @sanity/icons only exposes named icons through the
+// generic `Icon` component (via a lazy-loaded symbol map), not as
+// individually importable PascalCase components.
+const CogIcon = () => Icon({ symbol: 'cog' })
 
 /**
  * Existing document IDs for the four Site Configuration singletons.

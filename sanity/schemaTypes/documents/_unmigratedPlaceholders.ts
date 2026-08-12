@@ -15,7 +15,7 @@
 import { defineField, defineType } from 'sanity'
 
 const placeholderNotice = defineField({
-  name: '_placeholderNotice',
+  name: 'placeholderNotice',
   title: 'Not yet migrated',
   type: 'string',
   readOnly: true,
