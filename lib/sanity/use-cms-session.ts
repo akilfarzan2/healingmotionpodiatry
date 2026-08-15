@@ -16,15 +16,18 @@ type SessionState =
   | { status: 'unauthenticated'; user: null }
 
 async function fetchCurrentUser(): Promise<CmsUser | null> {
+  console.log('[v0] fetchCurrentUser: starting request to /users/me')
   try {
     const user = await cmsClient.request<CmsUser | null>({
       uri: '/users/me',
       withCredentials: true,
     })
+    console.log('[v0] fetchCurrentUser: success', user)
     return user ?? null
-  } catch {
+  } catch (err) {
     // A 401 (or any request failure) means there is no authenticated
     // Sanity session in this browser yet.
+    console.log('[v0] fetchCurrentUser: error', err)
     return null
   }
 }
