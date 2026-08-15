@@ -1,9 +1,20 @@
+'use client'
+
 import type { ReactNode } from 'react'
 import { Search, Bell } from 'lucide-react'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Input } from '@/components/ui/input'
+import { useCmsSession } from '@/lib/sanity/use-cms-session'
+
+function getInitials(name: string) {
+  const parts = name.trim().split(/\s+/)
+  const initials = parts.slice(0, 2).map((part) => part[0]?.toUpperCase() ?? '')
+  return initials.join('') || '?'
+}
 
 export function CmsTopbar({ title, actions }: { title: ReactNode; actions?: ReactNode }) {
+  const { user } = useCmsSession()
+
   return (
     <header className="flex h-16 shrink-0 items-center justify-between gap-4 border-b border-border bg-card px-6">
       <div className="min-w-0 flex-1">{title}</div>
@@ -27,8 +38,11 @@ export function CmsTopbar({ title, actions }: { title: ReactNode; actions?: Reac
         >
           <Bell className="size-4.5" strokeWidth={2} />
         </button>
-        <Avatar className="size-9">
-          <AvatarFallback className="bg-primary/10 text-sm font-semibold text-primary">HA</AvatarFallback>
+        <Avatar className="size-9" title={user?.name}>
+          {user?.profileImage ? <AvatarImage src={user.profileImage} alt={user.name} /> : null}
+          <AvatarFallback className="bg-primary/10 text-sm font-semibold text-primary">
+            {user ? getInitials(user.name) : '?'}
+          </AvatarFallback>
         </Avatar>
       </div>
     </header>

@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { CmsSidebar } from '@/components/cms/cms-sidebar'
+import { CmsAuthGate } from '@/components/cms/cms-auth-gate'
 
 export const metadata: Metadata = {
   title: {
@@ -11,9 +12,11 @@ export const metadata: Metadata = {
 
 export default function CmsLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex h-screen overflow-hidden bg-muted/40">
-      <CmsSidebar />
-      <div className="flex min-w-0 flex-1 flex-col overflow-hidden">{children}</div>
-    </div>
+    <CmsAuthGate>
+      <div className="flex h-screen overflow-hidden bg-muted/40">
+        <CmsSidebar />
+        <div className="flex min-w-0 flex-1 flex-col overflow-hidden">{children}</div>
+      </div>
+    </CmsAuthGate>
   )
 }
